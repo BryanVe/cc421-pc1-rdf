@@ -39,6 +39,3 @@ def get_devil_fruit_types():
         devil_fruit_type_list.append(devil_fruit_type_info)
 
     return devil_fruit_type_list
-
-
-print(get_devil_fruit_types())
