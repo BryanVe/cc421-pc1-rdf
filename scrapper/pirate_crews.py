@@ -1,6 +1,4 @@
 import requests
-import csv
-from selenium import webdriver
 from bs4 import BeautifulSoup
 
 BASE_URL = 'https://onepiece.fandom.com/wiki/'
