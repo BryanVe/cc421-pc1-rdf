@@ -32,11 +32,13 @@ def get_devil_fruit(url):
             user_div = div
             user_value = user_div.find_all('a')[0].get_text()
 
+    type_url = f'{BASE_URL}{type_value}'
     devil_fruit_info = {
         "name": name,
         "meaning": meaning_value,
         "first": first_value,
         "type": type_value,
+        "type_url": type_url,
         "user": user_value,
         "url": url
     }
