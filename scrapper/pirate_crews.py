@@ -31,6 +31,9 @@ def get_pirate_crews():
 
         if 'jname' in dataDic.keys():
             dataDic.pop('jname')
+        if 'N/A' in dataDic['ename']:
+            dataDic['ename'] = ship
+
         dataDic.setdefault('status','Unknown')
         if 'ename' not in dataDic.keys():
             if 'rname' in dataDic.keys():
