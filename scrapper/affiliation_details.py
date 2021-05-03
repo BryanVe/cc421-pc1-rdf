@@ -60,6 +60,3 @@ def get_affiliation_details(url):
 
     affiliation_data['url'] = url
     return affiliation_data
-
-
-print(get_affiliation_details(f'{BASE_URL}{AFFILIATIONS[0]}'))
