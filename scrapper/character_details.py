@@ -1,4 +1,5 @@
 import re
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -17,7 +18,9 @@ STRING_IN_QUOTES_REGEX = r'"[A-z-.\s]+"'
 IGNORED_KEYS = [
     'Funi eva',
     '4kids eva',
-    'Odex eva'
+    'Odex eva',
+    'epithet',
+    'alias'
 ]
 
 
@@ -26,7 +29,7 @@ def format_value_by_key(key, div):
     value = re.sub(CLEAN_VALUE_REGEX, '', value)
 
     if key == 'first':
-        first = div.find_all('a')[1].get_text().replace('Episode ', '')
+        first = div.div.find_all('a', recursive=False)[1].get_text().replace('Episode ', '')
 
         return first
     elif key == 'affiliation':
@@ -34,17 +37,14 @@ def format_value_by_key(key, div):
         affiliations = []
 
         for a_affiliation in a_affiliations:
-            affiliations.append(a_affiliation.get_text())
+            affiliations.append({
+                "url": a_affiliation.get('href'),
+                "value": a_affiliation.get_text()
+            })
 
         return affiliations
     elif key == 'occupation':
-        raw_occupations = value.split(';')
-
-        occupations = []
-        for raw_occupation in raw_occupations:
-            occupations.append(raw_occupation.split(' (')[0].strip())
-
-        return occupations
+        return [raw_occupation.split(' (')[0].strip() for raw_occupation in value.split(';')]
     elif key == 'residence':
         a_residences = div.find_all('a', attrs={"title": re.compile('.*')})
         residences = []
@@ -69,30 +69,6 @@ def format_value_by_key(key, div):
         romaji = div.find_all(class_='t_nihongo_romaji')[0].get_text()
 
         return f'{real_name} ({romaji})'
-    elif key == 'alias':
-        alias = re.findall(STRING_IN_QUOTES_REGEX, value)
-        romajis = div.find_all(class_='t_nihongo_romaji')
-
-        results = []
-        for index in range(len(romajis)):
-            cleaned_alias = alias[index].replace('"', '')
-            cleaned_romaji = romajis[index].get_text()
-
-            results.append(f'{cleaned_alias} ({cleaned_romaji})')
-
-        return results
-    elif key == 'epithet':
-        epithet = re.findall(STRING_IN_QUOTES_REGEX, value)
-        romajis = div.find_all(class_='t_nihongo_romaji')
-
-        results = []
-        for index in range(len(romajis)):
-            cleaned_epithet = epithet[index].replace('"', '')
-            cleaned_romaji = romajis[index].get_text()
-
-            results.append(f'{cleaned_epithet} ({cleaned_romaji})')
-
-        return results
     elif key == 'jva':
         a_jvas = div.find_all('a', attrs={'class': 'extiw'})
         jvas = []
@@ -101,6 +77,17 @@ def format_value_by_key(key, div):
             jvas.append(a_jva.get_text())
 
         return jvas
+    elif key == "dfname":
+        return {
+            "url": div.div.a.get("href"),
+            "value": value
+        }
+    elif key == "dftype":
+        return {
+            "url": div.div.a.get("href"),
+            "value": value
+        }
+
     return value
 
 
