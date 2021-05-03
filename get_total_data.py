@@ -85,7 +85,6 @@ c = []
 count = 0
 
 for character in characters:
-    print(BASE_URL + character)
-    test = get_character_details(BASE_URL + character)
-    c.append(test)
-    print(json.dumps(test, indent=4))
+    c.append(get_character_details(BASE_URL + character))
+
+print(json.dumps(c, indent=4))
