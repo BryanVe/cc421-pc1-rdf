@@ -1,4 +1,5 @@
 import re
+from unicodedata import normalize
 
 import requests
 from bs4 import BeautifulSoup
@@ -24,6 +25,11 @@ def get_geography_data(region):
         del region_data["extra1"]
     if "extra2" in region_data:
         del region_data["extra2"]
+
+    unnormalized = region_data["rname"]
+
+    region_data["rname"] = normalize('NFKD', unnormalized).encode('ASCII', 'ignore').decode("utf-8")
+    region_data["uriRef"] = url
 
     numbers = [s for s in re.findall(r'-?\d+\.?\d*', region_data.get("first"))]
     if len(numbers[-1]) == 1:
