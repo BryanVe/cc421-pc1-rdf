@@ -25,6 +25,7 @@ first = URIRef('characteristic:debut')
 alias = URIRef('characteristic:alias')
 ## falta
 
+RDFS.term()
 # General categories
 
 """
