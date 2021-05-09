@@ -57,9 +57,9 @@ def get_ship(ship):
     dataT = dataFirst.split(', ') if (',' in dataFirst) else dataFirst.split('; ')
 
     if 'Chapter' in dataT[0]:
-        dataDic['first'] = dataT[1]
+        dataDic['first'] = dataT[1].replace("Episode ", "")
     else:
-        dataDic['first'] = dataT[0]
+        dataDic['first'] = dataT[0].replace("Episode ", "")
 
     if "rname" in dataDic.keys():
         dataDic["rname"] = normalize('NFKD', dataDic["rname"]).encode('ASCII', 'ignore').decode("utf-8")
@@ -75,3 +75,5 @@ def get_ship(ship):
         del dataDic["extra2"]
 
     return dataDic
+
+print(get_ship('Jewelry_Margherita'))

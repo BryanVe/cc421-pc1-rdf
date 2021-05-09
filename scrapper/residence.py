@@ -77,8 +77,7 @@ def get_residence(resid):
         if len(dataT) > 1 and k == 'first':
             for epi in dataT:
                 if 'Chapter' not in epi:
-                    dataDic['first'] = epi
-
+                    dataDic['first'] = epi.replace(" Episode ", "")
         else:
             if k == 'first':
                 dataDic['first'] = dataT[0]
@@ -97,3 +96,5 @@ def get_residence(resid):
     print(dataDic)
         #ALL_RESIDENCE.append(dataDic)
     return dataDic
+
+print(get_residence('Sabaody_Archipelago'))
