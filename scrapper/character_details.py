@@ -91,8 +91,8 @@ def format_value_by_key(key, div):
     return value
 
 
-def get_character_details(url):
-    page = requests.get(url)
+def get_character_details(character):
+    page = requests.get(BASE_URL + character)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     divs = soup.find_all('div', class_='pi-item pi-data pi-item-spacing pi-border-color')
@@ -103,5 +103,6 @@ def get_character_details(url):
 
         if key not in IGNORED_KEYS:
             character_data[key] = format_value_by_key(key, div)
+            character_data["uriRef"] = BASE_URL + character
 
     return character_data
