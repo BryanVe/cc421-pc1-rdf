@@ -25,7 +25,6 @@ properties = {
     "first": first,
     "meaning": meaning,
 }
-print(get_devil_fruit(BASE_URL+DEVIL_FRUITS[0]))
 
 OPW = ClosedNamespace(
     uri=URIRef('https://onepiece.fandom.com/wiki/'),
@@ -43,7 +42,7 @@ OPW = ClosedNamespace(
 
 def get_devilFruitG(graph):
     for dfruit in DEVIL_FRUITS:
-        dfruit_object = get_devil_fruit(BASE_URL+dfruit)
+        dfruit_object = get_devil_fruit(dfruit)
         dfruit_url = URIRef(dfruit_object['url'])
         print(dfruit_object['type_url'])
         print(dfruit)

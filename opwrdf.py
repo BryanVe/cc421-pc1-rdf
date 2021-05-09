@@ -1,11 +1,13 @@
 from rdflib import URIRef, Graph, Literal
-from rdflib.namespace import ClosedNamespace, Namespace, RDFS
+from rdflib.namespace import ClosedNamespace, Namespace, RDFS,RDF
 
 import constants
-from constants import SHIPS, CHARACTERS, ORGANIZATIONS, BASE_URL
+from constants import SHIPS, CHARACTERS, ORGANIZATIONS, DEVIL_FRUITS, BASE_URL
 from graph_utils import convert_to_a_graph
 from scrapper.affiliation_details import get_affiliation_details
 from scrapper.character_details import get_character_details
+from scrapper.devil_fruit import get_devil_fruit
+from scrapper.devil_fruit_type import get_devil_fruit_types
 from scrapper.ship import get_ship
 
 
@@ -20,7 +22,6 @@ class OpwRdf:
                    "Devil_Fruit"
                    ]
         )
-
         self.__root_namespace = Namespace("opw/")
         self.__graph = self.__initialize_graph()
         self.__a_graph = None
@@ -43,10 +44,13 @@ class OpwRdf:
             "blood type": URIRef("opw/blood_type"),
             "bounty": URIRef("opw/bounty"),
             "dfname": URIRef("opw/devil_fruit"),
+            "name": URIRef("opw/devil_fruit"),
             # TODO Devil fruit english must be from another instance (?)
             "dfename": URIRef("opw/devil_fruit_english_name"),
             "dfirst": URIRef("opw/devil_fruit_debut"),
+            "extra1": URIRef("opw/meaning_fruit_type"),
             # TODO Devil fruit meaning must be from another instance (?)
+            "meaning": URIRef("opw/devil_fruit_meaning"),
             "dfmeaning": URIRef("opw/devil_fruit_meaning"),
             # TODO Devil fruit type must be another instance (?)
             "dftype": URIRef("opw/devil_fruit_type"),
@@ -85,6 +89,38 @@ class OpwRdf:
                 if key not in ["uriRef", "affiliation"]:
                     self.__graph.add(
                         (ship_rdf, self.__subject_properties[key], Literal(ship_object[key])))
+
+    def fill_devil_type_fruit(self):
+        devilType_objects = get_devil_fruit_types()
+        for devilType in devilType_objects:
+            devilType_ = URIRef(devilType["url"])
+            self.__graph.add((devilType_, RDFS.Class, self.__closed_namespace.Devil_Fruit))
+            for key in devilType.keys():
+                if key != 'url':
+                    self.__graph.add((
+                        devilType_,
+                        self.__subject_properties[key],
+                        Literal(devilType[key])
+                    ))
+
+    def fill_devil_fruit(self):
+        for dfruit in DEVIL_FRUITS:
+            dfruit_object = get_devil_fruit(dfruit)
+            dfruit_rdf = URIRef(constants.BASE_URL+dfruit_object['url'])
+
+            self.__graph.add((
+                dfruit_rdf,
+                RDF.type,
+                URIRef(dfruit_object['type_url'])
+            ))
+
+            for key in dfruit_object.keys():
+                if key not in ['type', 'type_url', 'user', 'url']:
+                    self.__graph.add((
+                        dfruit_rdf,
+                        self.__subject_properties[key],
+                        Literal(dfruit_object[key])
+                    ))
 
     def fill_characters(self):
         for character in CHARACTERS:
@@ -151,6 +187,10 @@ print("Loading organizations ...")
 opw_rdf.fill_organizations()
 print("Loading ships ...")
 opw_rdf.fill_ships()
+print("Loading type fruits...")
+opw_rdf.fill_devil_type_fruit()
+print("Loading  fruits...")
+opw_rdf.fill_devil_fruit()
 print("Loading characters ...")
 opw_rdf.fill_characters()
 f = open("test.xml", "w+")

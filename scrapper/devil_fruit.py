@@ -6,7 +6,7 @@ DEVIL_FRUITS = ["Gasu_Gasu_no_Mi"]
 
 
 def get_devil_fruit(url):
-    page = requests.get(url)
+    page = requests.get(BASE_URL+url)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     divs = soup.find_all('div', class_="pi-item pi-data pi-item-spacing pi-border-color")
@@ -47,4 +47,4 @@ def get_devil_fruit(url):
 
     return devil_fruit_info
 
-print(get_devil_fruit(BASE_URL+'Fuku_Fuku_no_Mi'))
+# print(get_devil_fruit('Fuku_Fuku_no_Mi'))
