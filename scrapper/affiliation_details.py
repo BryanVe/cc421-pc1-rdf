@@ -2,17 +2,18 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-AFFILIATIONS = [
-    'Beasts_Pirates'
-]
-
-BASE_URL = 'https://onepiece.fandom.com/wiki/'
 CLEAN_VALUE_REGEX = r'\[[0-9]+\]'
-
 IGNORED_KEYS = [
-    'ename',
     'extra1',
-    'residency'
+    'residency',
+    'jname',
+    'leader',
+    'occupation',
+    'affiliation',
+    'transportation',
+    'ship',
+    'extra2',
+    'ename'
 ]
 
 
@@ -21,27 +22,14 @@ def format_value_by_key(key, div):
     value = re.sub(CLEAN_VALUE_REGEX, '', value)
 
     if key == 'first':
-        first = div.find_all('a')[1].get_text().replace('Episode ', '')
+        first = div.find('a', attrs={"title": re.compile(r'Episode [0-9]+')}).get_text().replace('Episode ', '')
 
         return first
-    elif key == 'affiliation':
-        a_affiliations = div.find_all('a', attrs={"title": re.compile('.*')})
-        affiliations = []
-
-        for a_affiliation in a_affiliations:
-            affiliations.append(a_affiliation.get_text())
-
-        return affiliations
     elif key == 'bounty':
         return div.find_all('div')[0].get_text().split('[')[0]
-    elif key == 'jva':
-        a_jvas = div.find_all('a', attrs={'class': 'extiw'})
-        jvas = []
-
-        for a_jva in a_jvas:
-            jvas.append(a_jva.get_text())
-
-        return jvas
+    elif key == 'captain':
+        a_captain = div.find('a', attrs={"title": re.compile('.*')})
+        return a_captain.get_text()
     return value
 
 
