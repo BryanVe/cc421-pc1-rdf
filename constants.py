@@ -1,3 +1,5 @@
+BASE_URL = 'https://onepiece.fandom.com/wiki/'
+
 SHIPS = [
     "Nostra_Castello",
     "Red_Force",
@@ -104,4 +106,54 @@ CHARACTERS = [
     "Nekomamushi",
     "Inuarashi",
     "Kozuki_Oden"
+]
+
+ORGANIZATIONS = [
+    'Revolutionary_Army',
+    'Germa_66',
+    'Nine_Red_Scabbards',
+    {
+        'value': 'World_Government',
+        'sub_items': [
+            'Marines',
+            'Seven_Warlords_of_the_Sea',
+            'Cipher_Pol',
+            'Noble'
+        ]
+    },
+    {
+        'value': 'Pirate',
+        'sub_items': [
+            'Straw_Hat_Pirates',
+            'Seven_Warlords_of_the_Sea',
+            'Four_Emperors',
+            'Ninja-Pirate-Mink-Samurai_Alliance',
+            'Arlong_Pirates',
+            'Foxy_Pirates',
+            'Rumbar_Pirates',
+            'Sun_Pirates',
+            'Big_Mom_Pirates',
+            'Beasts_Pirates',
+            'Rocks_Pirates',
+            'Drake_Pirates',
+            'Barrels_Pirates',
+            'Hawkins_Pirates',
+            'On_Air_Pirates',
+            'Donquixote_Pirates',
+            'Bellamy_Pirates',
+            'Blackbeard_Pirates',
+            'Whitebeard_Pirates',
+            'Heart_Pirates',
+            'Kid_Pirates',
+            'Fire_Tank_Pirates',
+            'Bonney_Pirates',
+            'Fallen_Monk_Pirates',
+            'Kuja_Pirates',
+            'Roger_Pirates',
+            'Spade_Pirates',
+            'Alvida_Pirates',
+            'Red_Hair_Pirates',
+            'Buggy_Pirates'
+        ]
+    }
 ]

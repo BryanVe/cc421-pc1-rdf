@@ -13,7 +13,8 @@ IGNORED_KEYS = [
     'transportation',
     'ship',
     'extra2',
-    'ename'
+    'ename',
+    'extra3'
 ]
 
 

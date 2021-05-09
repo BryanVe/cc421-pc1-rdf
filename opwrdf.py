@@ -1,9 +1,10 @@
 from rdflib import URIRef, Graph, Literal
 from rdflib.namespace import ClosedNamespace, Namespace, RDFS
 
-from constants import SHIPS, CHARACTERS
+from constants import SHIPS, CHARACTERS, ORGANIZATIONS, BASE_URL
 from graph_utils import convert_to_a_graph
 from scrapper.character_details import get_character_details
+from scrapper.affiliation_details import get_affiliation_details
 from scrapper.ship import get_ship
 
 
@@ -11,7 +12,16 @@ class OpwRdf:
     def __init__(self):
         self.__closed_namespace = ClosedNamespace(
             uri=URIRef('https://onepiece.fandom.com/wiki/'),
-            terms=["Blue_Sea", "rname", "ename", "first", "uriRef", "Ship", "status", "List_of_Canon_Characters"]
+            terms=["Blue_Sea",
+                   "rname",
+                   "ename",
+                   "first",
+                   "uriRef",
+                   "Ship",
+                   "status",
+                   "List_of_Canon_Characters",
+                   "Category:Organizations",
+            ]
         )
 
         self.__root_namespace = Namespace("/")
@@ -25,6 +35,7 @@ class OpwRdf:
             "status": URIRef("status"),
             # TODO Affiliation must be another instance
             "affiliation": URIRef("affiliation"),
+            "captain": URIRef("captain"),
             # TODO Occupation must be another instance
             "occupation": URIRef("occupation"),
             "jname": URIRef("japanese_name"),
@@ -92,11 +103,41 @@ class OpwRdf:
                         (character_rdf, self.__subject_properties[key], Literal(character_object[key]))
                     )
 
+    def connect_main_class_and_characteristics(self, organization):
+        url = f'{BASE_URL}{organization}'
+        data = get_affiliation_details(url)
+        uri_ref = URIRef(url)
+
+        self.__graph.add((uri_ref, RDFS.Class, self.__closed_namespace['Category:Organizations']))
+        for key, value in data.items():
+            if key != 'url':
+                self.__graph.add((uri_ref, self.__subject_properties[key], Literal(value)))
+
+        return url, data
+
+    def fill_organizations(self):
+        for organization in ORGANIZATIONS:
+            if isinstance(organization, str):
+                self.connect_main_class_and_characteristics(organization)
+
+            elif isinstance(organization, dict):
+                value = organization['value']
+                sub_items = organization['sub_items']
+
+                superior_class, _ = self.connect_main_class_and_characteristics(value)
+
+                for sub_item in sub_items:
+                    url, data = self.connect_main_class_and_characteristics(sub_item)
+                    self.__graph.add((URIRef(url), RDFS.Class, URIRef(superior_class)))
+
 
 opw_rdf = OpwRdf()
-print("Loading ships ...")
-opw_rdf.fill_ships()
-print("Loading characters ...")
-opw_rdf.fill_characters()
-print("Creating image ...")
-opw_rdf.save_as_image("test.png")
+print("Loading organizations ...")
+opw_rdf.fill_organizations()
+print(opw_rdf.get_serialized_turtle_graph())
+# print("Loading ships ...")
+# opw_rdf.fill_ships()
+# print("Loading characters ...")
+# opw_rdf.fill_characters()
+# print("Creating image ...")
+# opw_rdf.save_as_image("test.png")
