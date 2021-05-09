@@ -1,3 +1,5 @@
+from unicodedata import normalize
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -37,8 +39,8 @@ def get_ship(ship):
 
     if 'jname' in dataDic.keys():
         dataDic.pop('jname')
-    if 'N/A' in dataDic['ename']:
-        dataDic['ename'] = ship
+    # if 'N/A' in dataDic['ename']:
+    #     dataDic['ename'] = ship
 
     dataDic.setdefault('status', 'Unknown')
     if 'ename' not in dataDic.keys():
@@ -59,6 +61,17 @@ def get_ship(ship):
     else:
         dataDic['first'] = dataT[0]
 
+    if "rname" in dataDic.keys():
+        dataDic["rname"] = normalize('NFKD', dataDic["rname"]).encode('ASCII', 'ignore').decode("utf-8")
+
     # ALL_SHIPS.append(dataDic)
+    dataDic["uriRef"] = BASE_URL + ship
+
+    if "birthday" in dataDic.keys():
+        del dataDic["birthday"]
+    if "extra1" in dataDic.keys():
+        del dataDic["extra1"]
+    if "extra2" in dataDic.keys():
+        del dataDic["extra2"]
 
     return dataDic
