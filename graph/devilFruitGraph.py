@@ -16,10 +16,20 @@ DEVIL_FRUITS = ["Gasu_Gasu_no_Mi","Gomu_Gomu_no_Mi","Bara_Bara_no_Mi","Hana_Hana
                 "Pika_Pika_no_Mi","Zushi_Zushi_no_Mi","Mera_Mera_no_Mi","Fuku_Fuku_no_Mi","Artificial_Devil_Fruit",
                 "Hito_Hito_no_M,_Model:_Daibutsu","Hie_Hie_no_Mi","Doru_Doru_no_Mi",""]
 
+name = URIRef("/rname")
+meaning = URIRef("/meaning")
+first = URIRef("/first")
+
+properties = {
+    "rname": name,
+    "first": first,
+    "meaning": meaning,
+}
+print(get_devil_fruit(BASE_URL+DEVIL_FRUITS[0]))
 
 OPW = ClosedNamespace(
     uri=URIRef('https://onepiece.fandom.com/wiki/'),
-    terms=["rname", "ename", "extra1", "uriRef"]
+    terms=["rname", "meaning", "first", "type", "type_url", "user","url"]
 )
 '''
         "name": name,
@@ -30,3 +40,12 @@ OPW = ClosedNamespace(
         "user": user_value,
         "url": url
 '''
+
+ns1 = Namespace("/")
+
+devilFGraph = Graph()
+
+def get_devilFruitG(graph):
+    for dfruit in DEVIL_FRUITS:
+        dfruit_object = get_devil_fruit(BASE_URL+dfruit)
+        dfruit_url = URIRef(dfruit_object['url'])
