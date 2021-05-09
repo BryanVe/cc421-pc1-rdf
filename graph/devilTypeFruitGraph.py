@@ -29,7 +29,6 @@ devilType_objects = get_devil_fruit_types()
 def get_devilTypeFruitG(g):
     for devilType in devilType_objects:
         devilType_ = URIRef(devilType["url"])
-
         g.add((devilType_, RDFS.Class,OPW.Devil_Fruit))
         for key in devilType.keys():
             if key != 'url':

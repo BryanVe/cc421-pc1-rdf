@@ -28,6 +28,8 @@ def get_devil_fruit(url):
         elif div.get('data-source') == 'type':
             type_div = div
             type_value = type_div.find_all('a')[0].get_text()
+            if 'Zoan' in type_value:
+                type_value = 'Zoan'
         elif div.get('data-source') == 'user':
             user_div = div
             user_value = user_div.find_all('a')[0].get_text()
@@ -44,3 +46,5 @@ def get_devil_fruit(url):
     }
 
     return devil_fruit_info
+
+print(get_devil_fruit(BASE_URL+'Fuku_Fuku_no_Mi'))

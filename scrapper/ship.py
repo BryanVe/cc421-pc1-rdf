@@ -75,5 +75,3 @@ def get_ship(ship):
         del dataDic["extra2"]
 
     return dataDic
-
-print(get_ship('Jewelry_Margherita'))

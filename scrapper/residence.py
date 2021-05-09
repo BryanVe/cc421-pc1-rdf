@@ -93,8 +93,5 @@ def get_residence(resid):
                 start = dataDic['region'].find('(')
                 end = dataDic['region'].find(')')
                 dataDic['region'] = dataDic['region'].replace(dataDic['region'][start:end + 1], '')
-    print(dataDic)
         #ALL_RESIDENCE.append(dataDic)
     return dataDic
-
-print(get_residence('Sabaody_Archipelago'))

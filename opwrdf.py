@@ -21,6 +21,7 @@ class OpwRdf:
                    "status",
                    "List_of_Canon_Characters",
                    "Category:Organizations",
+                   "Devil_Fruit"
             ]
         )
 
@@ -49,11 +50,12 @@ class OpwRdf:
             # TODO Devil fruit must be another instance (?)
             "dfname": URIRef("opw/devil_fruit_name"),
             # TODO Devil fruit english must be from another instance (?)
-            "dfename": URIRef("opw/devil_fruit_english_name"),
+            # "dfename": URIRef("opw/devil_fruit_english_name"),
+            "dfirst": URIRef("opw/devil_fruit_debut"),
             # TODO Devil fruit meaning must be from another instance (?)
             "dfmeaning": URIRef("opw/devil_fruit_meaning"),
             # TODO Devil fruit type must be another instance (?)
-            "dftype": URIRef("opw/devil_fruit_meaning"),
+            #"dftype": URIRef("opw/devil_fruit_type"),
             "real name": URIRef("opw/real_name")
         }
 
