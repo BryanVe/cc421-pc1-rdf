@@ -1,6 +1,7 @@
 from rdflib import URIRef, Graph, Literal
 from rdflib.namespace import ClosedNamespace, Namespace, RDFS
 
+import constants
 from constants import SHIPS, CHARACTERS, ORGANIZATIONS, BASE_URL
 from graph_utils import convert_to_a_graph
 from scrapper.affiliation_details import get_affiliation_details
@@ -29,7 +30,6 @@ class OpwRdf:
             "ename": URIRef("opw/english_name"),
             "first": URIRef("opw/first_episode"),
             "status": URIRef("opw/status"),
-            # TODO Affiliation must be another instance
             "affiliation": URIRef("opw/affiliation"),
             "captain": URIRef("opw/captain"),
             # TODO Occupation must be another instance
@@ -42,15 +42,14 @@ class OpwRdf:
             "height": URIRef("opw/height"),
             "blood type": URIRef("opw/blood_type"),
             "bounty": URIRef("opw/bounty"),
-            # TODO Devil fruit must be another instance (?)
-            "dfname": URIRef("opw/devil_fruit_name"),
+            "dfname": URIRef("opw/devil_fruit"),
             # TODO Devil fruit english must be from another instance (?)
-            # "dfename": URIRef("opw/devil_fruit_english_name"),
+            "dfename": URIRef("opw/devil_fruit_english_name"),
             "dfirst": URIRef("opw/devil_fruit_debut"),
             # TODO Devil fruit meaning must be from another instance (?)
             "dfmeaning": URIRef("opw/devil_fruit_meaning"),
             # TODO Devil fruit type must be another instance (?)
-            # "dftype": URIRef("opw/devil_fruit_type"),
+            "dftype": URIRef("opw/devil_fruit_type"),
             "real name": URIRef("opw/real_name")
         }
 
@@ -96,9 +95,28 @@ class OpwRdf:
 
             for key in character_object:
                 if key not in ["uriRef", "jname", "jva", "age2", "dfname2", "dfename2", "dfmeaning2", "dftype2"]:
-                    self.__graph.add(
-                        (character_rdf, self.__subject_properties[key], Literal(character_object[key]))
-                    )
+                    if key == "affiliation":
+                        for affiliation in character_object["affiliation"]:
+                            self.__graph.add((
+                                character_rdf,
+                                self.__subject_properties[key],
+                                URIRef(constants.BASE_URL_NO_WIKI + affiliation["url"])
+                            ))
+                    elif key == "occupation":
+                        for occupation in character_object["occupation"]:
+                            self.__graph.add(
+                                (character_rdf, self.__subject_properties[key], Literal(occupation))
+                            )
+                    elif key == "dfname":
+                        self.__graph.add((
+                            character_rdf,
+                            self.__subject_properties[key],
+                            URIRef(constants.BASE_URL_NO_WIKI + character_object[key]["url"])
+                        ))
+                    else:
+                        self.__graph.add(
+                            (character_rdf, self.__subject_properties[key], Literal(character_object[key]))
+                        )
 
     def __connect_main_class_and_characteristics(self, organization):
         url = f'{BASE_URL}{organization}'
@@ -135,6 +153,8 @@ print("Loading ships ...")
 opw_rdf.fill_ships()
 print("Loading characters ...")
 opw_rdf.fill_characters()
-print(opw_rdf.get_serialized_turtle_graph())
+f = open("test.xml", "w+")
+f.write(opw_rdf.get_serialized_xml_graph())
+f.close()
 # print("Creating image ...")
-# opw_rdf.save_as_image("test.png")
+opw_rdf.save_as_image("test.png")

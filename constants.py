@@ -1,4 +1,5 @@
 BASE_URL = 'https://onepiece.fandom.com/wiki/'
+BASE_URL_NO_WIKI = "https://onepiece.fandom.com"
 
 SHIPS = [
     "Nostra_Castello",
@@ -178,7 +179,7 @@ DEVIL_FRUITS = [
     "Ryu_Ryu_no_Mi,_Model:_Pteranodon",
     "Zou_Zou_no_Mi,_Model:_Mammoth",
     "Ryu_Ryu_no_Mi,_Model:_Allosaurus",
-    "Wara_Wara_no_Mi","Beta_Beta_no_Mi",
+    "Wara_Wara_no_Mi", "Beta_Beta_no_Mi",
     "Hira_Hira_no_Mi",
     "Ishi_Ishi_no_Mi",
     "Mochi_Mochi_no_Mi",
@@ -190,15 +191,15 @@ DEVIL_FRUITS = [
     "Shiro_Shiro_no_Mi",
     "Tori_Tori_no_Mi,_Model:_Phoenix",
     "Nikyu_Nikyu_no_Mi",
-     "Horu_Horu_no_Mi",
-     "Mero_Mero_no_Mi",
-      "Suna_Suna_no_Mi",
-      "Magu_Magu_no_Mi",
-      "Toki_Toki_no_Mi",
-      "Pika_Pika_no_Mi",
-      "Zushi_Zushi_no_Mi",
-      "Mera_Mera_no_Mi",
-      "Fuku_Fuku_no_Mi",
-      "Hie_Hie_no_Mi",
-      "Doru_Doru_no_Mi"
+    "Horu_Horu_no_Mi",
+    "Mero_Mero_no_Mi",
+    "Suna_Suna_no_Mi",
+    "Magu_Magu_no_Mi",
+    "Toki_Toki_no_Mi",
+    "Pika_Pika_no_Mi",
+    "Zushi_Zushi_no_Mi",
+    "Mera_Mera_no_Mi",
+    "Fuku_Fuku_no_Mi",
+    "Hie_Hie_no_Mi",
+    "Doru_Doru_no_Mi"
 ]
