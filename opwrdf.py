@@ -13,16 +13,11 @@ class OpwRdf:
         self.__closed_namespace = ClosedNamespace(
             uri=URIRef('https://onepiece.fandom.com/wiki/'),
             terms=["Blue_Sea",
-                   "rname",
-                   "ename",
-                   "first",
-                   "uriRef",
                    "Ship",
-                   "status",
                    "List_of_Canon_Characters",
                    "Category:Organizations",
                    "Devil_Fruit"
-            ]
+                   ]
         )
 
         self.__root_namespace = Namespace("opw/")
@@ -55,7 +50,7 @@ class OpwRdf:
             # TODO Devil fruit meaning must be from another instance (?)
             "dfmeaning": URIRef("opw/devil_fruit_meaning"),
             # TODO Devil fruit type must be another instance (?)
-            #"dftype": URIRef("opw/devil_fruit_type"),
+            # "dftype": URIRef("opw/devil_fruit_type"),
             "real name": URIRef("opw/real_name")
         }
 
@@ -105,7 +100,7 @@ class OpwRdf:
                         (character_rdf, self.__subject_properties[key], Literal(character_object[key]))
                     )
 
-    def connect_main_class_and_characteristics(self, organization):
+    def __connect_main_class_and_characteristics(self, organization):
         url = f'{BASE_URL}{organization}'
         data = get_affiliation_details(url)
         uri_ref = URIRef(url)
@@ -120,16 +115,16 @@ class OpwRdf:
     def fill_organizations(self):
         for organization in ORGANIZATIONS:
             if isinstance(organization, str):
-                self.connect_main_class_and_characteristics(organization)
+                self.__connect_main_class_and_characteristics(organization)
 
             elif isinstance(organization, dict):
                 value = organization['value']
                 sub_items = organization['sub_items']
 
-                superior_class, _ = self.connect_main_class_and_characteristics(value)
+                superior_class, _ = self.__connect_main_class_and_characteristics(value)
 
                 for sub_item in sub_items:
-                    url, data = self.connect_main_class_and_characteristics(sub_item)
+                    url, data = self.__connect_main_class_and_characteristics(sub_item)
                     self.__graph.add((URIRef(url), RDFS.Class, URIRef(superior_class)))
 
 
@@ -138,8 +133,8 @@ print("Loading organizations ...")
 opw_rdf.fill_organizations()
 print("Loading ships ...")
 opw_rdf.fill_ships()
+print("Loading characters ...")
+opw_rdf.fill_characters()
 print(opw_rdf.get_serialized_turtle_graph())
-# print("Loading characters ...")
-# opw_rdf.fill_characters()
 # print("Creating image ...")
 # opw_rdf.save_as_image("test.png")
