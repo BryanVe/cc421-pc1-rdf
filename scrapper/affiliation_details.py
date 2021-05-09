@@ -1,4 +1,6 @@
 import re
+from unicodedata import normalize
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -31,6 +33,8 @@ def format_value_by_key(key, div):
     elif key == 'captain':
         a_captain = div.find('a', attrs={"title": re.compile('.*')})
         return a_captain.get_text()
+    elif key == 'rname':
+        return normalize('NFKD', value).encode('ASCII', 'ignore').decode("utf-8")
     return value
 
 

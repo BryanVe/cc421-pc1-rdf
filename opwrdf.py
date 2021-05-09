@@ -3,8 +3,8 @@ from rdflib.namespace import ClosedNamespace, Namespace, RDFS
 
 from constants import SHIPS, CHARACTERS, ORGANIZATIONS, BASE_URL
 from graph_utils import convert_to_a_graph
-from scrapper.character_details import get_character_details
 from scrapper.affiliation_details import get_affiliation_details
+from scrapper.character_details import get_character_details
 from scrapper.ship import get_ship
 
 
@@ -24,37 +24,37 @@ class OpwRdf:
             ]
         )
 
-        self.__root_namespace = Namespace("/")
+        self.__root_namespace = Namespace("opw/")
         self.__graph = self.__initialize_graph()
         self.__a_graph = None
 
         self.__subject_properties = {
-            "rname": URIRef("romaji_name"),
-            "ename": URIRef("english_name"),
-            "first": URIRef("first_episode"),
-            "status": URIRef("status"),
+            "rname": URIRef("opw/romaji_name"),
+            "ename": URIRef("opw/english_name"),
+            "first": URIRef("opw/first_episode"),
+            "status": URIRef("opw/status"),
             # TODO Affiliation must be another instance
-            "affiliation": URIRef("affiliation"),
-            "captain": URIRef("captain"),
+            "affiliation": URIRef("opw/affiliation"),
+            "captain": URIRef("opw/captain"),
             # TODO Occupation must be another instance
-            "occupation": URIRef("occupation"),
-            "jname": URIRef("japanese_name"),
+            "occupation": URIRef("opw/occupation"),
+            "jname": URIRef("opw/japanese_name"),
             # TODO Residence must be another instance
-            "residence": URIRef("residence"),
-            "age": URIRef("age"),
-            "birth": URIRef("birthday"),
-            "height": URIRef("height"),
-            "blood type": URIRef("blood_type"),
-            "bounty": URIRef("bounty"),
+            "residence": URIRef("opw/residence"),
+            "age": URIRef("opw/age"),
+            "birth": URIRef("opw/birthday"),
+            "height": URIRef("opw/height"),
+            "blood type": URIRef("opw/blood_type"),
+            "bounty": URIRef("opw/bounty"),
             # TODO Devil fruit must be another instance (?)
-            "dfname": URIRef("devil_fruit_name"),
+            "dfname": URIRef("opw/devil_fruit_name"),
             # TODO Devil fruit english must be from another instance (?)
-            "dfename": URIRef("devil_fruit_english_name"),
+            "dfename": URIRef("opw/devil_fruit_english_name"),
             # TODO Devil fruit meaning must be from another instance (?)
-            "dfmeaning": URIRef("devil_fruit_meaning"),
+            "dfmeaning": URIRef("opw/devil_fruit_meaning"),
             # TODO Devil fruit type must be another instance (?)
-            "dftype": URIRef("devil_fruit_meaning"),
-            "real name": URIRef("real_name")
+            "dftype": URIRef("opw/devil_fruit_meaning"),
+            "real name": URIRef("opw/real_name")
         }
 
     def get_graph(self):
@@ -134,9 +134,9 @@ class OpwRdf:
 opw_rdf = OpwRdf()
 print("Loading organizations ...")
 opw_rdf.fill_organizations()
+print("Loading ships ...")
+opw_rdf.fill_ships()
 print(opw_rdf.get_serialized_turtle_graph())
-# print("Loading ships ...")
-# opw_rdf.fill_ships()
 # print("Loading characters ...")
 # opw_rdf.fill_characters()
 # print("Creating image ...")
