@@ -250,24 +250,6 @@ class OpwRdf:
                     self.__graph.add((URIRef(url), RDFS.subClassOf, URIRef(superior_class)))
 
 
-opw_rdf = OpwRdf()
-print("Loading organizations ...")
-# opw_rdf.fill_organizations()
-print("Loading ships ...")
-opw_rdf.fill_ships()
-print("Loading type fruits ...")
-opw_rdf.fill_devil_type_fruit()
-print("Loading  fruits...")
-opw_rdf.fill_devil_fruit()
-print("Loading characters ...")
-# opw_rdf.fill_characters()
-print("Loading oceans ...")
-# opw_rdf.fill_oceans()
-
-# print("Creating image ...")
-# opw_rdf.save_as_image("test.png")
-
-
 def create_xml():
     f = open("opw.xml", "w+")
     f.write(opw_rdf.get_serialized_xml_graph())
@@ -300,8 +282,25 @@ def get_ship_details(graph, ship_uri):
     return graph.query(sparql_query, initBindings={'s': ship_uri})
 
 
-for ship in get_ships(opw_rdf.get_graph()):
-    print(ship, ':')
-    for detail in get_ship_details(opw_rdf.get_graph(), URIRef(ship)):
-        print('- ', detail)
-    print('')
+opw_rdf = OpwRdf()
+print("Loading organizations ...")
+opw_rdf.fill_organizations()
+print("Loading ships ...")
+opw_rdf.fill_ships()
+print("Loading type fruits ...")
+opw_rdf.fill_devil_type_fruit()
+print("Loading  fruits...")
+opw_rdf.fill_devil_fruit()
+print("Loading characters ...")
+opw_rdf.fill_characters()
+print("Loading oceans ...")
+opw_rdf.fill_oceans()
+
+print("Creating image ...")
+opw_rdf.save_as_image("test.png")
+
+# for ship in get_ships(opw_rdf.get_graph()):
+#     print(ship, ':')
+#     for detail in get_ship_details(opw_rdf.get_graph(), URIRef(ship)):
+#         print('- ', detail)
+#     print('')
