@@ -2,6 +2,7 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
+from unicodedata import normalize
 
 CHARACTERS = [
     'Gol_D._Roger'
@@ -32,6 +33,8 @@ def format_value_by_key(key, div):
         first = div.div.find_all('a', recursive=False)[1].get_text().replace('Episode ', '')
 
         return first
+    elif key == 'rname':
+        return normalize('NFKD', value).encode('ASCII', 'ignore').decode("utf-8")
     elif key == 'affiliation':
         a_affiliations = div.find_all('a', attrs={"title": re.compile('.*')})
         affiliations = []
@@ -43,6 +46,17 @@ def format_value_by_key(key, div):
             })
 
         return affiliations
+    elif key == 'residence':
+        a_residences = div.find_all('a', attrs={"title": re.compile('.*')})
+        residences = []
+
+        for a_residence in a_residences:
+            residences.append({
+                "url": a_residence.get('href'),
+                "value": a_residence.get_text()
+            })
+
+        return residences
     elif key == 'occupation':
         return [raw_occupation.split(' (')[0].strip() for raw_occupation in value.split(';')]
     elif key == 'residence':
