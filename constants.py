@@ -221,4 +221,39 @@ DEVIL_FRUIT_TYPES = [
 #     "Doru_Doru_no_Mi"
 # ]
 
-DEVIL_FRUITS = ["Gomu_Gomu_no_Mi"]
+DEVIL_FRUITS = [
+    "Gomu_Gomu_no_Mi"]
+
+OCEANS = [
+    "North_Blue",
+    "South_Blue",
+    "East_Blue",
+    "West_Blue",
+    "Grand_Line"]
+
+REGIONS = [
+    'Loguetown',
+    'Foosha_Village',
+    'Mt._Colubo',
+    'Rusukaina',
+    'Shimotsuki_Village',
+    'Kuraigana_Island',
+    'Skypiea',
+    'Fish-Man_Island',
+    'G-5',
+    'Zou',
+    'Wano_Country',
+    'Karai_Bari_Island',
+    'Baterilla',
+    'Orange_Town',
+    'Cocoyasi_Village',
+    'Weatheria',
+    'Syrup_Village',
+    'Boin_Archipelago',
+    'Baratie',
+    'Germa_Kingdom', 'Momoiro_Island',
+    'Drum_Island', 'Torino_Kingdom', 'Ohara', 'Arabasta_Kingdom', 'Baltigo', 'Water_7', 'Karakuri_Island',
+    'Florian_Triangle', 'Namakura_Island', 'Fish-Man_District',
+    'Mary_Geoise', 'Spider_Miles', 'Dressrosa', 'Komugi_Island', 'Flevance', 'Amazon_Lily', 'Udon', 'Kuri',
+    'Arlong_Park', 'Gray_Terminal', 'Shells_Town', 'Fish-Man_Island',
+    'Goat_Island', 'Goa_Kingdom', 'Mt._Colubo', 'Swallow_Island', 'Sphinx_(Location)', 'Sabaody_Archipelago']

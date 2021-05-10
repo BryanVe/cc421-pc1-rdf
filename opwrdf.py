@@ -8,6 +8,7 @@ from scrapper.affiliation_details import get_affiliation_details
 from scrapper.character_details import get_character_details
 from scrapper.devil_fruit import get_devil_fruit
 from scrapper.devil_fruit_type import get_devil_fruit_types
+from scrapper.geography_data import get_geography_data
 from scrapper.ship import get_ship
 
 
@@ -71,6 +72,17 @@ class OpwRdf:
         self.__set_a_graph()
         self.__a_graph.draw(name)
 
+    def fill_oceans(self):
+        for ocean in constants.OCEANS:
+            ocean_object = get_geography_data(ocean)
+            ocean_rdf = URIRef(ocean_object["uriRef"])
+
+            self.__graph.add((ocean_rdf, RDFS.Class, self.__closed_namespace.Blue_Sea))
+
+            for key in ocean_object:
+                if key != 'uriRef':
+                    self.__graph.add((ocean_rdf, self.__subject_properties[key], Literal(ocean_object[key])))
+        
     def fill_ships(self):
         for ship in SHIPS:
             ship_object = get_ship(ship)
@@ -123,8 +135,19 @@ class OpwRdf:
             self.__graph.add((character_rdf, RDFS.Class, self.__closed_namespace.List_of_Canon_Characters))
 
             for key in character_object:
-                if key not in ["uriRef", "jname", "jva", "age2", "dfname2", "dfename2", "dfmeaning2", "dftype2",
-                               "dftype", "dfename", "dfmeaning"]:
+                if key not in [
+                    "uriRef",
+                    "jname",
+                    "jva",
+                    "age2",
+                    "dfname2",
+                    "dfename2",
+                    "dfmeaning2",
+                    "dftype2",
+                    "dftype",
+                    "dfename",
+                    "dfmeaning"
+                ]:
                     if key == "affiliation":
                         for affiliation in character_object["affiliation"]:
                             self.__graph.add((
@@ -143,6 +166,8 @@ class OpwRdf:
                             self.__subject_properties[key],
                             URIRef(constants.BASE_URL_NO_WIKI + character_object[key]["url"])
                         ))
+                    elif key == "residence":
+                        print(character_object[key])
                     else:
                         self.__graph.add(
                             (character_rdf, self.__subject_properties[key], Literal(character_object[key]))
@@ -187,6 +212,8 @@ print("Loading  fruits...")
 opw_rdf.fill_devil_fruit()
 print("Loading characters ...")
 opw_rdf.fill_characters()
+print("Loading oceans ...")
+opw_rdf.fill_oceans()
 f = open("test.xml", "w+")
 f.write(opw_rdf.get_serialized_xml_graph())
 f.close()
