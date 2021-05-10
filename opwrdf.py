@@ -122,8 +122,6 @@ class OpwRdf:
                 URIRef(d_fruit_object['type_url'])
             ))
 
-            print(d_fruit_rdf)
-
             for key in d_fruit_object.keys():
                 if key not in ['type', 'type_url', 'user', 'url']:
                     print(d_fruit_object[key])
