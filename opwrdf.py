@@ -122,8 +122,11 @@ class OpwRdf:
                 URIRef(d_fruit_object['type_url'])
             ))
 
+            print(d_fruit_rdf)
+
             for key in d_fruit_object.keys():
                 if key not in ['type', 'type_url', 'user', 'url']:
+                    print(d_fruit_object[key])
                     self.__graph.add((
                         d_fruit_rdf,
                         self.__subject_properties[key],
@@ -295,7 +298,7 @@ print("Loading oceans ...")
 
 
 def create_xml():
-    f = open("opw.xml", "w+")
+    f = open("test.xml", "w+")
     f.write(opw_rdf.get_serialized_xml_graph())
     f.close()
 
@@ -339,6 +342,8 @@ print("Loading characters ...")
 opw_rdf.fill_characters()
 print("Loading oceans ...")
 opw_rdf.fill_oceans()
+
+create_xml()
 
 print("Creating image ...")
 opw_rdf.save_as_image("test.png")
