@@ -15,7 +15,7 @@ def convert_to_a_graph(rdf_graph):
         'fontcolor': 'white',
         'bgcolor': '#333333',
         'rankdir': 'BT',
-        'overlap': 'prism',
+        'overlap': 'scalexy',
         'splines': 'true'
     }))
     a_graph.node_attr.update(multi_di_graph.graph.get("node", {
@@ -46,7 +46,7 @@ def convert_to_a_graph(rdf_graph):
     if multi_di_graph.is_multigraph():
         for u, v, key, edge_data in multi_di_graph.edges(data=True, keys=True):
             str_edge_data = {k: str(v) for k, v in edge_data.items() if k != "key"}
-            a_graph.add_edge(u, v, label=str(key))
+            a_graph.add_edge(u, v, headlabel=str(key))
             a = a_graph.get_edge(u, v)
             a.attr.update(str_edge_data)
 
