@@ -265,7 +265,8 @@ class OpwRdf:
 
         # get the first episode of Gasu Gasu no Mi
         print('First episode Gasu Gasu no Mi')
-        for s in self.__graph.transitive_objects(URIRef(f'{BASE_URL}Gasu_Gasu_no_Mi'), self.__subject_properties['first']):
+        for s in self.__graph.transitive_objects(URIRef(f'{BASE_URL}Gasu_Gasu_no_Mi'),
+                                                 self.__subject_properties['first']):
             print(s)
 
         # get the type of Gasu Gasu no Mi
@@ -277,24 +278,6 @@ class OpwRdf:
         print('Devil Fruits type Paramecia')
         for s in self.__graph.transitive_subjects(RDF.type, URIRef(f'{BASE_URL}Paramecia')):
             print(s)
-
-
-opw_rdf = OpwRdf()
-print("Loading organizations ...")
-# opw_rdf.fill_organizations()
-print("Loading ships ...")
-opw_rdf.fill_ships()
-print("Loading type fruits ...")
-opw_rdf.fill_devil_type_fruit()
-print("Loading  fruits...")
-opw_rdf.fill_devil_fruit()
-print("Loading characters ...")
-# opw_rdf.fill_characters()
-print("Loading oceans ...")
-# opw_rdf.fill_oceans()
-
-# print("Creating image ...")
-# opw_rdf.save_as_image("test.png")
 
 
 def create_xml():
