@@ -1,5 +1,5 @@
 from rdflib import URIRef, Graph, Literal
-from rdflib.namespace import ClosedNamespace, Namespace, RDFS,RDF
+from rdflib.namespace import ClosedNamespace, Namespace, RDFS, RDF
 
 import constants
 from constants import SHIPS, CHARACTERS, ORGANIZATIONS, DEVIL_FRUITS, BASE_URL
@@ -33,7 +33,6 @@ class OpwRdf:
             "status": URIRef("opw/status"),
             "affiliation": URIRef("opw/affiliation"),
             "captain": URIRef("opw/captain"),
-            # TODO Occupation must be another instance
             "occupation": URIRef("opw/occupation"),
             "jname": URIRef("opw/japanese_name"),
             # TODO Residence must be another instance
@@ -44,16 +43,10 @@ class OpwRdf:
             "blood type": URIRef("opw/blood_type"),
             "bounty": URIRef("opw/bounty"),
             "dfname": URIRef("opw/devil_fruit"),
-            "name": URIRef("opw/devil_fruit"),
-            # TODO Devil fruit english must be from another instance (?)
-            "dfename": URIRef("opw/devil_fruit_english_name"),
-            "dfirst": URIRef("opw/devil_fruit_debut"),
+            "name": URIRef("opw/name"),
             "extra1": URIRef("opw/meaning_fruit_type"),
-            # TODO Devil fruit meaning must be from another instance (?)
-            "meaning": URIRef("opw/devil_fruit_meaning"),
-            "dfmeaning": URIRef("opw/devil_fruit_meaning"),
-            # TODO Devil fruit type must be another instance (?)
-            "dftype": URIRef("opw/devil_fruit_type"),
+            "meaning": URIRef("opw/meaning"),
+            "type": URIRef("opw/type"),
             "real name": URIRef("opw/real_name")
         }
 
@@ -91,35 +84,35 @@ class OpwRdf:
                         (ship_rdf, self.__subject_properties[key], Literal(ship_object[key])))
 
     def fill_devil_type_fruit(self):
-        devilType_objects = get_devil_fruit_types()
-        for devilType in devilType_objects:
-            devilType_ = URIRef(devilType["url"])
-            self.__graph.add((devilType_, RDFS.Class, self.__closed_namespace.Devil_Fruit))
+        devil_type_objects = get_devil_fruit_types()
+        for devilType in devil_type_objects:
+            devil_type_ = URIRef(devilType["url"])
+            self.__graph.add((devil_type_, RDFS.Class, self.__closed_namespace.Devil_Fruit))
             for key in devilType.keys():
                 if key != 'url':
                     self.__graph.add((
-                        devilType_,
+                        devil_type_,
                         self.__subject_properties[key],
                         Literal(devilType[key])
                     ))
 
     def fill_devil_fruit(self):
-        for dfruit in DEVIL_FRUITS:
-            dfruit_object = get_devil_fruit(dfruit)
-            dfruit_rdf = URIRef(constants.BASE_URL+dfruit_object['url'])
+        for d_fruit in DEVIL_FRUITS:
+            d_fruit_object = get_devil_fruit(d_fruit)
+            d_fruit_rdf = URIRef(constants.BASE_URL + d_fruit_object['url'])
 
             self.__graph.add((
-                dfruit_rdf,
+                d_fruit_rdf,
                 RDF.type,
-                URIRef(dfruit_object['type_url'])
+                URIRef(d_fruit_object['type_url'])
             ))
 
-            for key in dfruit_object.keys():
+            for key in d_fruit_object.keys():
                 if key not in ['type', 'type_url', 'user', 'url']:
                     self.__graph.add((
-                        dfruit_rdf,
+                        d_fruit_rdf,
                         self.__subject_properties[key],
-                        Literal(dfruit_object[key])
+                        Literal(d_fruit_object[key])
                     ))
 
     def fill_characters(self):
@@ -130,7 +123,8 @@ class OpwRdf:
             self.__graph.add((character_rdf, RDFS.Class, self.__closed_namespace.List_of_Canon_Characters))
 
             for key in character_object:
-                if key not in ["uriRef", "jname", "jva", "age2", "dfname2", "dfename2", "dfmeaning2", "dftype2"]:
+                if key not in ["uriRef", "jname", "jva", "age2", "dfname2", "dfename2", "dfmeaning2", "dftype2",
+                               "dftype", "dfename", "dfmeaning"]:
                     if key == "affiliation":
                         for affiliation in character_object["affiliation"]:
                             self.__graph.add((
@@ -196,5 +190,5 @@ opw_rdf.fill_characters()
 f = open("test.xml", "w+")
 f.write(opw_rdf.get_serialized_xml_graph())
 f.close()
-# print("Creating image ...")
+print("Creating image ...")
 opw_rdf.save_as_image("test.png")
