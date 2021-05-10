@@ -175,10 +175,14 @@ ORGANIZATIONS = [
     }
 ]
 
+# DEVIL_FRUIT_TYPES = [
+#     "Logia",
+#     "Paramecia",
+#     "Zoan"
+# ]
+
 DEVIL_FRUIT_TYPES = [
-    "Logia",
-    "Paramecia",
-    "Zoan"
+    "Paramecia"
 ]
 
 # DEVIL_FRUITS = [
