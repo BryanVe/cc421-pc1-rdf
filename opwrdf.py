@@ -1,4 +1,4 @@
-from rdflib import URIRef, Graph, Literal
+from rdflib import URIRef, Graph, Literal, BNode
 from rdflib.namespace import ClosedNamespace, Namespace, RDFS, RDF
 
 import constants
@@ -254,7 +254,7 @@ opw_rdf = OpwRdf()
 print("Loading organizations ...")
 # opw_rdf.fill_organizations()
 print("Loading ships ...")
-# opw_rdf.fill_ships()
+opw_rdf.fill_ships()
 print("Loading type fruits ...")
 opw_rdf.fill_devil_type_fruit()
 print("Loading  fruits...")
@@ -263,24 +263,45 @@ print("Loading characters ...")
 # opw_rdf.fill_characters()
 print("Loading oceans ...")
 # opw_rdf.fill_oceans()
-f = open("test.xml", "w+")
-f.write(opw_rdf.get_serialized_xml_graph())
-f.close()
-print("Creating image ...")
-opw_rdf.save_as_image("test.png")
 
-# print(opw_rdf.get_serialized_xml_graph())
-
-# print("Loading ships ...")
-# opw_rdf.fill_ships()
-# print("Loading type fruits...")
-# opw_rdf.fill_devil_type_fruit()
-# print("Loading  fruits...")
-# opw_rdf.fill_devil_fruit()
-# print("Loading characters ...")
-# opw_rdf.fill_characters()
-# f = open("test.xml", "w+")
-# f.write(opw_rdf.get_serialized_xml_graph())
-# f.close()
 # print("Creating image ...")
 # opw_rdf.save_as_image("test.png")
+
+
+def create_xml():
+    f = open("opw.xml", "w+")
+    f.write(opw_rdf.get_serialized_xml_graph())
+    f.close()
+
+
+# Example SPARQL
+def get_ships(graph):
+    ship_class = URIRef("https://onepiece.fandom.com/wiki/Ship")
+
+    sparql_query = """
+        SELECT DISTINCT ?s
+        WHERE {
+        ?s ?p ?o .
+        }
+        """
+
+    results = graph.query(sparql_query, initBindings={'o': ship_class})
+    return [str(result[0]) for result in results]
+
+
+def get_ship_details(graph, ship_uri):
+    sparql_query = """
+    SELECT ?p ?o
+    WHERE {
+    ?s ?p ?o .
+    }
+    """
+
+    return graph.query(sparql_query, initBindings={'s': ship_uri})
+
+
+for ship in get_ships(opw_rdf.get_graph()):
+    print(ship, ':')
+    for detail in get_ship_details(opw_rdf.get_graph(), URIRef(ship)):
+        print('- ', detail)
+    print('')
