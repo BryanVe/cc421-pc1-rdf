@@ -48,7 +48,8 @@ class OpwRdf:
             "extra1": URIRef("opw/meaning_fruit_type"),
             "meaning": URIRef("opw/meaning"),
             "type": URIRef("opw/type"),
-            "real name": URIRef("opw/real_name")
+            "real name": URIRef("opw/real_name"),
+            "ship": URIRef("opw/ship")
         }
 
     def get_graph(self):
@@ -82,7 +83,7 @@ class OpwRdf:
             for key in ocean_object:
                 if key != 'uriRef':
                     self.__graph.add((ocean_rdf, self.__subject_properties[key], Literal(ocean_object[key])))
-        
+
     def fill_ships(self):
         for ship in SHIPS:
             ship_object = get_ship(ship)
@@ -181,7 +182,16 @@ class OpwRdf:
         self.__graph.add((uri_ref, RDFS.Class, self.__closed_namespace['Category:Organizations']))
         for key, value in data.items():
             if key != 'url':
-                self.__graph.add((uri_ref, self.__subject_properties[key], Literal(value)))
+                # have to iterate on ship list
+                if key == 'ship':
+                    for ship in value:
+                        ship_name = ship.replace(' ', '_')
+                        self.__graph.add((uri_ref, self.__subject_properties[key], URIRef(f'{BASE_URL}{ship_name}')))
+                elif key == 'captain':
+                    captain = value.replace(' ', '_')
+                    self.__graph.add((uri_ref, self.__subject_properties[key], URIRef(f'{BASE_URL}{captain}')))
+                else:
+                    self.__graph.add((uri_ref, self.__subject_properties[key], Literal(value)))
 
         return url, data
 
@@ -219,3 +229,19 @@ f.write(opw_rdf.get_serialized_xml_graph())
 f.close()
 print("Creating image ...")
 opw_rdf.save_as_image("test.png")
+
+print(opw_rdf.get_serialized_turtle_graph())
+
+# print("Loading ships ...")
+# opw_rdf.fill_ships()
+# print("Loading type fruits...")
+# opw_rdf.fill_devil_type_fruit()
+# print("Loading  fruits...")
+# opw_rdf.fill_devil_fruit()
+# print("Loading characters ...")
+# opw_rdf.fill_characters()
+# f = open("test.xml", "w+")
+# f.write(opw_rdf.get_serialized_xml_graph())
+# f.close()
+# print("Creating image ...")
+# opw_rdf.save_as_image("test.png")

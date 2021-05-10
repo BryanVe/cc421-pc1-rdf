@@ -13,12 +13,13 @@ IGNORED_KEYS = [
     'occupation',
     'affiliation',
     'transportation',
-    'ship',
     'extra2',
     'ename',
     'extra3'
 ]
 
+def test(pattern, string):
+    return bool(re.search(pattern, string))
 
 def format_value_by_key(key, div):
     value = div.find_all('div')[0].get_text()
@@ -35,6 +36,18 @@ def format_value_by_key(key, div):
         return a_captain.get_text()
     elif key == 'rname':
         return normalize('NFKD', value).encode('ASCII', 'ignore').decode("utf-8")
+    elif key == 'ship':
+        links = div.find_all('a', attrs={"title": re.compile(r'.*')})
+        filtered_links = []
+
+        for link in links:
+            title = link.get('title')
+            episode_regex = r'Episode [0-9]*'
+            chapter_regex = r'Chapter [0-9]*'
+            if not test(episode_regex, title) and not test(chapter_regex, title):
+                filtered_links.append(link.get_text())
+
+        return filtered_links
     return value
 
 
