@@ -124,7 +124,6 @@ class OpwRdf:
 
             for key in d_fruit_object.keys():
                 if key not in ['type', 'type_url', 'user', 'url']:
-                    print(d_fruit_object[key])
                     self.__graph.add((
                         d_fruit_rdf,
                         self.__subject_properties[key],
