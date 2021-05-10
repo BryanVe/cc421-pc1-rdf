@@ -1,4 +1,4 @@
-from rdflib import URIRef, Graph, Literal
+from rdflib import URIRef, Graph, Literal, BNode
 from rdflib.namespace import ClosedNamespace, Namespace, RDFS, RDF
 
 import constants
@@ -122,8 +122,11 @@ class OpwRdf:
                 URIRef(d_fruit_object['type_url'])
             ))
 
+            print(d_fruit_rdf)
+
             for key in d_fruit_object.keys():
                 if key not in ['type', 'type_url', 'user', 'url']:
+                    print(d_fruit_object[key])
                     self.__graph.add((
                         d_fruit_rdf,
                         self.__subject_properties[key],
@@ -249,6 +252,65 @@ class OpwRdf:
                     url, data = self.__connect_main_class_and_characteristics(sub_item)
                     self.__graph.add((URIRef(url), RDFS.subClassOf, URIRef(superior_class)))
 
+    def test_inferences(self):
+        # get all the organizations
+        print('All organizations')
+        for s in self.__graph.transitive_subjects(RDFS.Class, URIRef(f'{BASE_URL}Category:Organizations')):
+            print(s)
+
+        # get super classes of Marines
+        print('Super classes of Marines')
+        for s in self.__graph.transitive_subjects(URIRef(f'{BASE_URL}Marines'), RDFS.Class):
+            print(s)
+
+        # get the first episode of Gasu Gasu no Mi
+        print('First episode Gasu Gasu no Mi')
+        for s in self.__graph.transitive_objects(URIRef(f'{BASE_URL}Gasu_Gasu_no_Mi'),
+                                                 self.__subject_properties['first']):
+            print(s)
+
+        # get the type of Gasu Gasu no Mi
+        print('Type Gasu Gasu no Mi')
+        for s in self.__graph.transitive_objects(URIRef(f'{BASE_URL}Gasu_Gasu_no_Mi'), RDF.type):
+            print(s)
+
+        # get all the devil fruits type Paramecia
+        print('Devil Fruits type Paramecia')
+        for s in self.__graph.transitive_subjects(RDF.type, URIRef(f'{BASE_URL}Paramecia')):
+            print(s)
+
+
+def create_xml():
+    f = open("test.xml", "w+")
+    f.write(opw_rdf.get_serialized_xml_graph())
+    f.close()
+
+
+# Example SPARQL
+def get_ships(graph):
+    ship_class = URIRef("https://onepiece.fandom.com/wiki/Ship")
+
+    sparql_query = """
+        SELECT DISTINCT ?s
+        WHERE {
+        ?s ?p ?o .
+        }
+        """
+
+    results = graph.query(sparql_query, initBindings={'o': ship_class})
+    return [str(result[0]) for result in results]
+
+
+def get_ship_details(graph, ship_uri):
+    sparql_query = """
+    SELECT ?p ?o
+    WHERE {
+    ?s ?p ?o .
+    }
+    """
+
+    return graph.query(sparql_query, initBindings={'s': ship_uri})
+
 
 opw_rdf = OpwRdf()
 print("Loading organizations ...")
@@ -263,24 +325,18 @@ print("Loading characters ...")
 opw_rdf.fill_characters()
 print("Loading oceans ...")
 opw_rdf.fill_oceans()
-f = open("test.xml", "w+")
-f.write(opw_rdf.get_serialized_xml_graph())
-f.close()
+
+create_xml()
+
 print("Creating image ...")
 opw_rdf.save_as_image("test.png")
 
-# print(opw_rdf.get_serialized_xml_graph())
+# for ship in get_ships(opw_rdf.get_graph()):
+#     print(ship, ':')
+#     for detail in get_ship_details(opw_rdf.get_graph(), URIRef(ship)):
+#         print('- ', detail)
+#     print('')
 
-# print("Loading ships ...")
-# opw_rdf.fill_ships()
-# print("Loading type fruits...")
-# opw_rdf.fill_devil_type_fruit()
-# print("Loading  fruits...")
-# opw_rdf.fill_devil_fruit()
-# print("Loading characters ...")
-# opw_rdf.fill_characters()
-# f = open("test.xml", "w+")
-# f.write(opw_rdf.get_serialized_xml_graph())
-# f.close()
-# print("Creating image ...")
-# opw_rdf.save_as_image("test.png")
+
+opw_rdf.test_inferences()
+# print(opw_rdf.get_serialized_turtle_graph())

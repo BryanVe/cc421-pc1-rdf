@@ -15,7 +15,7 @@ def convert_to_a_graph(rdf_graph):
         'fontcolor': 'white',
         'bgcolor': '#333333',
         'rankdir': 'BT',
-        'overlap': 'scalexy',
+        'overlap': 'prism',
         'splines': 'true'
     }))
     a_graph.node_attr.update(multi_di_graph.graph.get("node", {
